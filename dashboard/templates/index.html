@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <title>DRIVE SAFE 2.0 | Monitor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="DRIVE SAFE home">
+        <span class="brand-icon">DS</span>
+        <span>DRIVE <b>SAFE</b><small>DRIVER MONITORING</small></span>
+      </a>
+      <div class="topbar-right">
+        <span class="readonly-badge">READ-ONLY DASHBOARD</span>
+        <span class="engine-indicator" id="engineIndicator"><i></i><span>ENGINE OFFLINE</span></span>
+      </div>
+    </header>
+
+    <section class="intro">
+      <div>
+        <p class="eyebrow">OVERVIEW</p>
+        <h1>Driver monitoring</h1>
+        <p class="subheading">Live results from the separate DRIVE SAFE AI engine.</p>
+      </div>
+      <p class="last-updated">Last update <strong id="updatedAt">Waiting for engine</strong></p>
+    </section>
+
+    <section class="summary-grid" aria-label="Current driver status">
+      <article class="panel status-panel">
+        <div class="panel-heading"><span>FATIGUE STATUS</span><span class="live-dot"></span></div>
+        <div id="statusValue" class="status-value not-detected">NOT DETECTED</div>
+        <p id="statusMessage" class="muted">AI engine is not running</p>
+      </article>
+      <article class="panel score-panel">
+        <div class="panel-heading"><span>FATIGUE RISK SCORE</span><span id="scoreLabel">/ 100</span></div>
+        <div class="score-row"><strong id="riskValue">100</strong><span>risk points</span></div>
+        <div class="progress-track"><div id="riskBar" class="progress-value"></div></div>
+        <p id="riskHint" class="muted">No live detection data</p>
+      </article>
+      <article class="panel connect-panel">
+        <div class="panel-heading"><span>CONNECTIONS</span></div>
+        <div class="connection-row"><span>Webcam / AI</span><strong id="cameraValue">OFFLINE</strong></div>
+        <div class="connection-row"><span>Face detected</span><strong id="faceValue">NO</strong></div>
+        <div class="connection-row"><span>Arduino</span><strong id="arduinoValue">DISCONNECTED</strong></div>
+      </article>
+    </section>
+
+    <section class="metric-grid" aria-label="Live detection measurements">
+      <article class="panel metric"><span>Eye aspect ratio</span><strong id="earValue">0.000</strong></article>
+      <article class="panel metric"><span>Mouth aspect ratio</span><strong id="marValue">0.000</strong></article>
+      <article class="panel metric"><span>PERCLOS</span><strong id="perclosValue">0.0%</strong></article>
+      <article class="panel metric"><span>Prolonged eye closures</span><strong id="closuresValue">0</strong></article>
+      <article class="panel metric"><span>Yawns</span><strong id="yawnsValue">0</strong></article>
+      <article class="panel metric"><span>Head nods</span><strong id="nodsValue">0</strong></article>
+    </section>
+
+    <section class="analytics-grid" aria-label="Fatigue analytics">
+      <article class="panel chart-panel">
+        <div class="section-heading">
+          <div><p class="eyebrow">TREND</p><h2>Fatigue risk score over time</h2></div>
+          <span class="chart-caption">Latest readings</span>
+        </div>
+        <div class="chart-wrap"><canvas id="riskChart" aria-label="Risk score chart"></canvas></div>
+      </article>
+      <article class="panel chart-panel">
+        <div class="section-heading">
+          <div><p class="eyebrow">SEVERITY</p><h2>Alerts by severity</h2></div>
+          <span class="chart-caption">Status transitions</span>
+        </div>
+        <div class="chart-wrap"><canvas id="severityChart" aria-label="Alerts by severity chart"></canvas></div>
+      </article>
+    </section>
+
+    <section class="panel history-panel">
+      <div class="section-heading">
+        <div><p class="eyebrow">RECENT ACTIVITY</p><h2>Event history</h2></div>
+        <span id="eventCount" class="chart-caption">0 events</span>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Time</th><th>Status</th><th>Risk</th><th>EAR</th><th>PERCLOS</th><th>Event</th></tr></thead>
+          <tbody id="historyRows"><tr><td colspan="6" class="empty-row">No events recorded yet.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>Academic demonstration only — not an automotive-certified safety system.</footer>
+  </main>
+  <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>

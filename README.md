@@ -92,7 +92,7 @@ event must meet its configured duration before it is counted. PERCLOS uses a
 rolling window; losing the face reports **NOT DETECTED**, not **NORMAL**.
 
 Default score bands are `NORMAL` below 30, `CAUTION` from 30, `HIGH RISK` from
-50, and `CRITICAL` from 75. Values can be adjusted in `.env`.
+50, and `CRITICAL` from 80. Values can be adjusted in `.env`.
 
 | Python status | Serial letter | Firmware behavior |
 |---|---:|---|
@@ -142,9 +142,13 @@ TELEGRAM_CHAT_ID=your_chat_id
 ```
 
 Credentials are read only by the AI process and are never exposed by the
-dashboard API. The engine requests an alert on entry to `CRITICAL`; it will not
-send another until the status recovers to `CAUTION` or `NORMAL` and later
-re-enters `CRITICAL`. Verify delivery using a non-driving demonstration.
+dashboard API. The critical alert is sent only after the status stays
+`CRITICAL` continuously for 10 seconds. It will not send another until the
+status recovers to `CAUTION` or `NORMAL` and later re-enters `CRITICAL`.
+Separately, more than four detected yawns in a rolling 60-second window trigger
+a one-time advisory to drink water or rest; it can trigger again after the
+count falls to four or fewer and later exceeds four again. Verify delivery
+using a non-driving demonstration.
 
 ## Viva concepts and evaluation
 

@@ -21,6 +21,7 @@ def test_weighted_risk_score_and_classification():
     assert classify_fatigue(20) == "NORMAL"
     assert classify_fatigue(40) == "CAUTION"
     assert classify_fatigue(60) == "HIGH RISK"
+    assert classify_fatigue(79) == "HIGH RISK"
     assert classify_fatigue(80) == "CRITICAL"
 
 

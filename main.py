@@ -16,7 +16,7 @@ from detection_engine import (
     DetectionUnavailableError,
 )
 from fatigue_calculator import FatigueCalculator
-from notification_service import NotificationService
+from notification_service import NotificationGate, NotificationService
 
 
 logger = logging.getLogger(__name__)
@@ -60,7 +60,7 @@ def run_detection():
     total_alerts = 0
     maximum_risk_score = 0
     previous_status = None
-    critical_latched = False
+    notification_gate = NotificationGate()
     last_sample_at = 0.0
     last_published_status = None
     exit_code = 0
@@ -155,15 +155,21 @@ def run_detection():
                     session_id, result["updated_at"], result, event_type
                 )
 
-            if status == "CRITICAL" and not critical_latched:
+            if notification_gate.should_send_critical(status, now):
                 threading.Thread(
                     target=notifier.send_critical,
                     args=(result["risk_score"], result["reasons"]),
                     daemon=False,
                 ).start()
-                critical_latched = True
-            elif status in ("NORMAL", "CAUTION"):
-                critical_latched = False
+            recent_yawns, should_send_yawn_alert = notification_gate.observe_yawn(
+                result["yawning_event"], now
+            )
+            if should_send_yawn_alert:
+                threading.Thread(
+                    target=notifier.send_yawn_advisory,
+                    args=(recent_yawns,),
+                    daemon=False,
+                ).start()
             previous_status = status
 
             arduino.send_status(status)
